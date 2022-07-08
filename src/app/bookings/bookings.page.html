@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mes Réservations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-list>
+          <ion-item
+                  *ngFor="let booking of bookings"
+                  [routerLink]="['/', 'places', 'tabs', 'discover', booking.id]"
+                  detail
+          >
+            <ion-thumbnail slot="start">
+              <ion-img [src]="placesService.getPlace(booking.placeId).imageUrl"></ion-img>
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{ placesService.getPlace(booking.placeId).title }}</h2>
+              <p>{{ booking.date }} - {{ booking.nbJours }} jours</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
