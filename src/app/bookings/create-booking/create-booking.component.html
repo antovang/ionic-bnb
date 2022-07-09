@@ -10,7 +10,8 @@
 </ion-header>
 
 <ion-content class="ion-text-center" padding>
-  <p>{{ selectedPlace.description }}</p>
+  <ion-img [src]="this.selectedPlace.imageUrl"></ion-img>
+  <p>{{ this.selectedPlace.description }}</p>
   <form [formGroup]="form">
     <ion-grid>
       <ion-row>

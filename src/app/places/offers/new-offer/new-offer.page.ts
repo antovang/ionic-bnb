@@ -56,7 +56,6 @@ export class NewOfferPage implements OnInit {
             true
         )
     );
-    console.log(this.placesService.myPlaces);
     this._location.back();
   }
 }
