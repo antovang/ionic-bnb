@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 
 import { AuthService } from './auth.service';
+import {NativeStorage} from '@ionic-native/native-storage/ngx';
 
 @Component({
   selector: 'app-auth',
@@ -15,6 +16,7 @@ export class AuthPage implements OnInit {
   isLogin = true;
 
   constructor(
+    private nativeStorage: NativeStorage,
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController
@@ -51,8 +53,36 @@ export class AuthPage implements OnInit {
 
     if (this.isLogin) {
       // Send a request to login servers
+      this.getItemOnLocalStorage(email)
+          .then(
+              data => {
+                console.log(data);
+                if (data.password === password) {
+                  this.onLogin();
+                }
+              },
+              error => {
+                  console.error('Error getting item', error);
+              }
+          );
     } else {
       // Send a request to signup servers
+      this.setItemOnLocalStorage(email, password)
+          .then(
+              () => {
+                this.onLogin();
+                console.log('Stored item!');
+              },
+              error => console.error('Error storing item', error)
+          );
     }
+  }
+
+  public getItemOnLocalStorage(email): Promise<any> {
+    return this.nativeStorage.getItem(email);
+  }
+
+  public setItemOnLocalStorage(email: string, password: string): Promise<any> {
+    return this.nativeStorage.setItem(email, {password: password});
   }
 }

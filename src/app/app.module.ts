@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { registerLocaleData } from '@angular/common';
 import {LOCALE_ID} from '@angular/core';
 import localeFr from '@angular/common/locales/fr';
+import {NativeStorage} from '@ionic-native/native-storage/ngx';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
@@ -21,6 +22,7 @@ registerLocaleData(localeFr, 'fr');
   providers: [
     StatusBar,
     SplashScreen,
+    NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LOCALE_ID, useValue: 'fr' // 'de' for Germany, 'fr' for France ...
     }
