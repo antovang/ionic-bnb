@@ -73,16 +73,25 @@ export class AuthPage implements OnInit {
               }
           );
     } else {
-      // Send a request to signup servers
-      this.setItemOnLocalStorage(email, password)
+      // On vérifie que le compte n'existe pas
+      this.getItemOnLocalStorage(email)
           .then(
               () => {
-                this.onLogin();
-                  this.presentToast('Utilisateur enregistré avec succès');
+                  this.presentToast('Votre compte existe déjà !');
               },
-              error => {
-                  console.error('Error setting item', error);
-                  this.presentToast('Erreur lors de l\'enregistrement');
+              () => {
+                  // Si le compte n'existe pas on l'enregistre
+                  this.setItemOnLocalStorage(email, password)
+                      .then(
+                          () => {
+                              this.onLogin();
+                              this.presentToast('Utilisateur enregistré avec succès');
+                          },
+                          () => {
+                              console.error('Error setting item');
+                              this.presentToast('Erreur lors de l\'enregistrement');
+                          }
+                      );
               }
           );
     }
