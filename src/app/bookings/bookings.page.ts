@@ -17,7 +17,10 @@ export class BookingsPage implements OnInit {
       private placesService: PlacesService,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.bookings = this.bookingsService.getBookings();
+    this.places = this.placesService.otherPlaces;
+  }
 
   // on utilise ionViewWillEnter pour charger la liste de places et réservation à
   // chaque accès à la page

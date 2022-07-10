@@ -16,7 +16,6 @@ export class AuthPage implements OnInit {
   isLogin = true;
 
   constructor(
-    private nativeStorage: NativeStorage,
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController,
@@ -25,9 +24,10 @@ export class AuthPage implements OnInit {
 
   ngOnInit() {}
 
-  onLogin() {
+  onLogin(email: string) {
     this.isLoading = true;
     this.authService.login();
+    this.authService.userId = email;
     this.loadingCtrl
       .create({ keyboardClose: true, message: 'Authentification en cours...' })
       .then(loadingEl => {
@@ -54,11 +54,11 @@ export class AuthPage implements OnInit {
 
     if (this.isLogin) {
       // Send a request to login servers
-      this.getItemOnLocalStorage(email)
+      this.authService.getItemOnLocalStorage(email)
           .then(
               data => {
                 if (data.password === password) {
-                  this.onLogin();
+                  this.onLogin(email);
                 } else {
                   this.presentToast('Mot de passe incorrect!');
                 }
@@ -74,17 +74,17 @@ export class AuthPage implements OnInit {
           );
     } else {
       // On vérifie que le compte n'existe pas
-      this.getItemOnLocalStorage(email)
+      this.authService.getItemOnLocalStorage(email)
           .then(
               () => {
                   this.presentToast('Votre compte existe déjà !');
               },
               () => {
                   // Si le compte n'existe pas on l'enregistre
-                  this.setItemOnLocalStorage(email, password)
+                  this.authService.setItemOnLocalStorage(email, password)
                       .then(
                           () => {
-                              this.onLogin();
+                              this.onLogin(email);
                               this.presentToast('Utilisateur enregistré avec succès');
                           },
                           () => {
@@ -95,14 +95,6 @@ export class AuthPage implements OnInit {
               }
           );
     }
-  }
-
-  public getItemOnLocalStorage(email): Promise<any> {
-    return this.nativeStorage.getItem(email);
-  }
-
-  public setItemOnLocalStorage(email: string, password: string): Promise<any> {
-    return this.nativeStorage.setItem(email, {password: password});
   }
 
   async presentToast(message: string) {

@@ -3,6 +3,7 @@ import {Location} from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {PlacesService} from '../../places.service';
 import {Place} from '../../place.model';
+import {AuthService} from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-new-offer',
@@ -14,7 +15,8 @@ export class NewOfferPage implements OnInit {
 
   constructor(
       private _location: Location,
-      private placesService: PlacesService
+      private placesService: PlacesService,
+      private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -49,11 +51,11 @@ export class NewOfferPage implements OnInit {
     this.placesService.addPlace(
         new Place(
             null,
+            this.authService.userId,
             this.form.value.title,
             this.form.value.description,
             'https://picsum.photos/seed/picsum/200/300',
-            this.form.value.price,
-            true
+            this.form.value.price
         )
     );
     this._location.back();

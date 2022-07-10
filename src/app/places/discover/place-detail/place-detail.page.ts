@@ -7,6 +7,7 @@ import { Place } from '../../place.model';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import {BookingsService} from '../../../bookings/bookings.service';
 import {Booking} from '../../../bookings/booking.model';
+import {AuthService} from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-place-detail',
@@ -22,6 +23,7 @@ export class PlaceDetailPage implements OnInit {
     private placesService: PlacesService,
     private modalCtrl: ModalController,
     private bookingsService: BookingsService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -47,7 +49,15 @@ export class PlaceDetailPage implements OnInit {
       .then(resultData => { // resultData : données transmises par la modale
         console.log(resultData.data, resultData.role);
         if (resultData.role === 'confirm') {
-          this.bookingsService.addBooking(new Booking('', this.place.id, resultData.data.date, resultData.data.days));
+          this.bookingsService.addBooking(
+              new Booking(
+                  '',
+                  this.authService.userId,
+                  this.place.id,
+                  resultData.data.date,
+                  resultData.data.days
+              )
+          );
           console.log('BOOKED!');
         }
       });

@@ -15,9 +15,15 @@ export class DiscoverPage implements OnInit {
     private placesService: PlacesService,
     private menuCtrl: MenuController
   ) {}
+
   ngOnInit() {
-    this.loadedPlaces = this.placesService.otherPlaces
+    this.loadedPlaces = this.placesService.otherPlaces;
   }
+
+  ionViewWillEnter() {
+    this.loadedPlaces = this.placesService.otherPlaces;
+  }
+
   onOpenMenu() {
     this.menuCtrl.toggle();
   }
