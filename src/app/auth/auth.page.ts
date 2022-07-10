@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import {LoadingController, ToastController} from '@ionic/angular';
 
 import { AuthService } from './auth.service';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
@@ -19,7 +19,8 @@ export class AuthPage implements OnInit {
     private nativeStorage: NativeStorage,
     private authService: AuthService,
     private router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
   ) {}
 
   ngOnInit() {}
@@ -56,13 +57,15 @@ export class AuthPage implements OnInit {
       this.getItemOnLocalStorage(email)
           .then(
               data => {
-                console.log(data);
                 if (data.password === password) {
                   this.onLogin();
+                } else {
+                  this.presentToast('Mot de passe incorrect!');
                 }
               },
               error => {
                   console.error('Error getting item', error);
+                  this.presentToast('Compte inexistant. Inscrivez vous!');
               }
           );
     } else {
@@ -71,9 +74,12 @@ export class AuthPage implements OnInit {
           .then(
               () => {
                 this.onLogin();
-                console.log('Stored item!');
+                  this.presentToast('Utilisateur enregistré avec succès');
               },
-              error => console.error('Error storing item', error)
+              error => {
+                  console.error('Error setting item', error);
+                  this.presentToast('Erreur lors de l\'enregistrement');
+              }
           );
     }
   }
@@ -84,5 +90,13 @@ export class AuthPage implements OnInit {
 
   public setItemOnLocalStorage(email: string, password: string): Promise<any> {
     return this.nativeStorage.setItem(email, {password: password});
+  }
+
+  async presentToast(message: string) {
+      const toast = await this.toastCtrl.create({
+          message: message,
+          duration: 2000
+      });
+      toast.present();
   }
 }
