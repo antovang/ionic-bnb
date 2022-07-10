@@ -65,7 +65,11 @@ export class AuthPage implements OnInit {
               },
               error => {
                   console.error('Error getting item', error);
+                  // J'ai choisi volontairement de ne pas ajouter le mot de passe dans le local storage automatiquement
+                  // mais de faire que l'utilisateur s'inscrive
                   this.presentToast('Compte inexistant. Inscrivez vous!');
+                  // on change le mode d'authentification pour que l'utilisateur s'inscrive
+                  this.isLogin = !this.isLogin;
               }
           );
     } else {
